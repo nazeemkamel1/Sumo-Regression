@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+data/
+sumo_since_1957.csv
+.DS_Store
+report_files/
+
+# External data and generated project files
+.quarto/
+*_cache/
