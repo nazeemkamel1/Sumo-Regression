@@ -180,7 +180,7 @@ ggplot(sumo_by_rikishi_15,
 
 # Abstract
 
-The term size matters is
+The term size matters seems heavily applicable in sumo, since wrestlers compete in a single open weight division. This study uses SCORE's sumo dataset to determine whether higher average bodyweight can be associated with a higher average matches won in tournaments. Linear regression is applied to 546 wrestler profiles, identified by ring name and birth dates, with at least two complete Makuuchi tournament appearances recorded. A 10 kilo difference in average weight recorded corresponded to about 0.46% higher predicted winning percentage per tournament. However, weight explains only 1.58% of the variation. This suggests that the weight of a wrestler alone does not explain or lead to much difference in average performance.
 
 # Introduction
 
@@ -259,7 +259,7 @@ The R\^2 was 0.01579, meaning the weight only explains 1.579% of the variation. 
 
 The results show a slight positive relationship between average weight and winning percentage, but it is a relatively insignificant one. A difference in 10 kilos between two competitors only results in 0.46% better performance at tournaments, with most of the variance being unexplained. This does not show that gaining weight could improve a wrestler's performance, or if a heavier wrestler is bound to have a superior Makuuchi tournament career.
 
-The analysis doesn't account for age, era, rank, or individual opponent match ups. It additionally flattens a wrestler's performance throughout their career. The majority of wrestlers also skew towards 2-4 tournament appearances, providing less information behind their averages. A useful next step would be to obtain tournament dates, more solid wrestler identifiers, and potential data on opponents in tournaments or individual matches.
+The analysis doesn't account for age, era, rank, or individual opponent match ups. It additionally flattens a wrestler's performance throughout their career. The majority of wrestlers also skew towards 2-4 tournament appearances, providing less information behind their averages. A useful next step would be to obtain tournament dates, more solid wrestler identifiers, and potential data on opponents in tournaments or individual matches. The study only measures the success of a wrestler against their own weight at time of competition, an interesting alternative could be the delta in weight between two competitors in a match, and its affect on who comes out victorious.
 
 # References
 
