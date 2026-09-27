@@ -2,7 +2,16 @@
 title: "The Impact of Weight on a Sumo Wrestler's Success"
 author: "Nazeem Kamel"
 date: today
-format: html
+format:
+  html:
+    embed-resources: true
+    html-math-method: mathml
+  pdf:
+    documentclass: article
+    pdf-engine: pdflatex
+    latex-auto-install: false
+    fontsize: 11pt
+    geometry: margin=1in
 execute:
   echo: false
   message: false
@@ -11,171 +20,7 @@ execute:
 ```{r}
 #| label: setup
 #| include: false
-
-library(tidyverse)
-library(broom)
-#| label: clean-data
-#| include: false
-
-library(tidyverse)
-
-# Download the original data once
-dir.create("data", showWarnings = FALSE)
-
-data_file <- "data/sumo_since_1957.csv"
-
-if (!file.exists(data_file)) {
-  download.file(
-    "https://data.scorenetwork.org/data/sumo_since_1957.csv",
-    destfile = data_file,
-    mode = "wb"
-  )
-}
-
-sumo_raw <- read_csv(data_file, show_col_types = FALSE)
-
-# Create a separate working dataset
-sumo_clean <- sumo_raw |>
-  mutate(
-    # Remove unnecessary whitespace in wrestler names
-    Rikishi = str_squish(Rikishi),
-    
-    # Convert birth dates from text into dates
-    birth_date = as.Date(`Birth Date`, format = "%d.%m.%Y"),
-    
-    # Convert height to metres
-    height_m = height_cm / 100,
-    
-    # Calculate BMI only when height and weight are valid
-    bmi = if_else(
-      is.finite(weight_kg) & weight_kg > 0 &
-        is.finite(height_m) & height_m > 0,
-      weight_kg / height_m^2,
-      NA_real_
-    )
-  )
-```
-
-```{r}
-#CREATE TABLE OF PERFORMANCE ROWS THAT RECORD FULL 15 BOUTS 
-library(dplyr)
-
-sumo_15 <- sumo_clean |>
-  mutate(
-    recorded_bouts = wins + losses
-  ) |>
-  filter(
-    recorded_bouts == 15
-  ) |>
-  mutate(
-    win_pct = 100 * wins / recorded_bouts
-  )
-```
-
-```{r}
-#TEST FOR BMI AGAINST INCOMPLETE TOURNEY COUNT
-#library(dplyr)
-#
-#sumo_by_rikishi <- sumo_clean |>
-#  group_by(Rikishi) |>
-#  summarise(
-#    avg_win_pct = mean(win_pct),
-#    appearances = n(),
-#    .groups = "drop"
-#  )
-#
-#View(sumo_by_rikishi)
-```
-
-```{r}
-#GROUP BY SUMO WRESTLERS AND INCLUDE BMI STAT
-library(dplyr)
-
-sumo_by_rikishi_15 <- sumo_15 |>
-  group_by(Rikishi, birth_date = .data[["Birth Date"]]) |>
-  summarise(
-   avg_bmi = mean(bmi),
-    avg_win_pct = mean(win_pct),
-    appearances = n(),
-    .groups = "drop"
-  )
-#View(sumo_by_rikishi_15)
-```
-
-```{r}
-library(dplyr)
-
-sumo_wrestlers <- sumo_15 |>
-  group_by(Rikishi, birth_date = .data[['Birth Date']]) |>
-  summarise(
-    avg_bmi = mean(bmi),
-    avg_weight_kg = mean(weight_kg),
-    avg_win_pct = mean(win_pct),
-    appearances = n(),
-    .groups = "drop"
-  )
-#View(sumo_wrestlers)
-```
-
-```{r}
-sumo_2plus <- sumo_wrestlers |>
-  filter(appearances >= 2)
-```
-
-```{r}
-# All retained Rikishi groups
-bmi_all <- lm(
-  avg_win_pct ~ avg_bmi,
-  data = sumo_wrestlers
-)
-
-weight_all <- lm(
-  avg_win_pct ~ avg_weight_kg,
-  data = sumo_wrestlers
-)
-
-# Groups with at least two qualifying appearances
-bmi_2plus <- lm(
-  avg_win_pct ~ avg_bmi,
-  data = sumo_2plus
-)
-
-weight_2plus <- lm(
-  avg_win_pct ~ avg_weight_kg,
-  data = sumo_2plus
-)
-
-# Inspect the restricted-sample results
-summary(bmi_2plus)
-summary(weight_2plus)
-
-# Confidence intervals for the weight model
-confint(weight_2plus)
-```
-
-```{r}
-#FIT DA MODEL
-bmi_model <- lm(
-  avg_win_pct ~ avg_bmi,
-  data = sumo_by_rikishi_15
-)
-
-summary(bmi_model)
-```
-
-```{r}
-library(ggplot2)
-
-ggplot(sumo_by_rikishi_15,
-       aes(x = avg_bmi, y = avg_win_pct)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", formula = y ~ x, se = TRUE) +
-  labs(
-    title = "Average BMI and Winning Percentage",
-    x = "Average BMI (kg/m²)",
-    y = "Average winning percentage (%)"
-  ) +
-  theme_minimal()
+source("R/run_analysis.R")
 ```
 
 # Abstract
@@ -202,45 +47,39 @@ An issue that arised was redundant ring names. 27 ring names appeared with more 
 
 The CSV lacks tournament dates, limiting the ability to account for potentially significant variables such as age at competition, or differences in performances across historical eras, which might favor certain builds due to competition meta or ruleset at the time. It also only covers Makuuchi appearances, and not a comprehensive record of all tournament results.
 
-\`\`\`{r}
-
-#\| label: tbl-descriptive
-
-#\| tbl-cap: "Descriptive statistics for groups with at least two qualifying appearances."
-
+```{r}
+#| label: tbl-descriptive
+#| tbl-cap: "Descriptive statistics for groups with at least two qualifying appearances."
 knitr::kable(
-
 descriptives, digits = 2,
-
 col.names = c("Variable", "Mean", "SD", "Minimum", "Maximum"),
-
 booktabs = TRUE
-
 )
-
-\`\`\`
+```
 
 # Methods
 
-Tournament appearances were filtered to only include those whos recorded wins and losses added up to 15. For each retained appearance, the winning percentage was calculated as (100 \\times \\text{wins}/(\\text{wins}+\\text{losses})). Records were then grouped by a combination of Rikishi name and birth date, as to seperate wrestlers who shared a ring name, of which there were found to be 27. Average bodyweight and average win percentage were calculated across all complete tournament appearances by a wrestler. The main analysis required at least two complete tournament appearances as to ensure a more consistent average was representative by each participating wrestler.
+Tournament appearances were filtered to only include those whos recorded wins and losses added up to 15. For each retained appearance, the winning percentage was calculated as $100 \times \text{wins}/(\text{wins}+\text{losses})$. Records were then grouped by a combination of Rikishi name and birth date, as to seperate wrestlers who shared a ring name, of which there were found to be 27. Average bodyweight and average win percentage were calculated across all complete tournament appearances by a wrestler. The main analysis required at least two complete tournament appearances as to ensure a more consistent average was representative by each participating wrestler.
+
+```{=latex}
+\begin{minipage}{\linewidth}
+```
 
 Linear regression was used to examine the association between average bodyweight and average win percentage, the model was:
 
-\[\
-Y_i=\\beta_0+\\beta_1X_i+\\varepsilon_i,\
-\]
+$$
+Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i.
+$$
 
-where (Y_i) is the average win percentage for group (i), (X_i) is the avg bodyweight in kilograms, (\\beta_0) is the intercept, and (\\beta_1) is the slope. The error, (\\varepsilon_i), represents the variation not explained by the relationship of the two parameters. The slope describes the expected difference in average win percentage be point of percent for each kilogram of average bodyweight across tournaments.
+```{=latex}
+\end{minipage}
+```
 
-The model assumes a linear relationship, independent errors, and constant error variance. Normal\
-errors are also assumed for the usual regression tests. Residual and Q-Q plots were checked\
-(Figure 2). The residuals had uneven spread and a long upper tail, making the variance and\
-normality assumptions questionable. Independence is also uncertain because a wrestler could appear\
-under different names. These issues limit the interpretation of the tests.
+where $Y_i$ is the average win percentage for group $i$, $X_i$ is the avg bodyweight in kilograms, $\beta_0$ is the intercept, and $\beta_1$ is the slope. The error, $\varepsilon_i$, represents the variation not explained by the relationship of the two parameters. The slope describes the expected difference in average win percentage be point of percent for each kilogram of average bodyweight across tournaments.
 
-BMI was initially explored as a measure of body size, with the choice of weight being subsequential. The slope, 95% confidence interval, p-value for a zero slope, and R2 were used to describe the results. R2\
-measures the proportion of variation explained by the fitted model. The analysis was done in R,\
-using dplyr for grouping, ggplot2 for plotting, and broom for model summaries
+The model assumes a linear relationship, independent errors, and constant error variance. Normal errors are also assumed for the usual regression tests. Residual and Q-Q plots were checked (Figure 2). The residuals had uneven spread and a long upper tail, making the variance and normality assumptions questionable. Independence is also uncertain because a wrestler could appear under different names. These issues limit the interpretation of the tests.
+
+BMI was initially explored as a measure of body size, with the choice of weight being subsequential. The slope, 95% confidence interval, p-value for a zero slope, and $R^2$ were used to describe the results. $R^2$ measures the proportion of variation explained by the fitted model. The analysis was done in R, using dplyr for grouping, ggplot2 for plotting, and broom for model summaries
 
 Using name and birth date separates shared names but does not resolve name changes within a wrestler’s career. Some wrestlers may end up contributing more than one group, limiting independence in rows. The analysis also does not account for age, historical era, rank, or opponent/tournament strength. The results describe associations between group averages and don't establish that gaining weight improves an individual wrestler’s performance.
 
@@ -248,12 +87,31 @@ Using name and birth date separates shared names but does not resolve name chang
 
 The fitted weight model was
 
-Yi = 41.495 + 0.04613Xi.
+$$
+\widehat{Y}_i = 41.495 + 0.04613 X_i.
+$$
 
-Here Yhat represents the predicted average winning percentage. A \`10kg difference in avg weight corresponds to about a 0.46 percentage point higher predicted win percentage. The slope's 95% confidence interval was 0.01546 to 0.07680 percentage points per kilo. Its p-value was\
-0.00327, below 0.05.
+Here $\widehat{Y}_i$ represents the predicted average winning percentage. A 10kg difference in avg weight corresponds to about a 0.46 percentage point higher predicted win percentage. The slope's 95% confidence interval was 0.01546 to 0.07680 percentage points per kilo. Its p-value was 0.00327, below 0.05.
 
-The R\^2 was 0.01579, meaning the weight only explains 1.579% of the variation. The line slopes slightly upward, but groups with similar weights still have considerably different winning percentages. For context, the original comparison against BMI explained about 0.54% of the variation. Neither predictor explains much of the difference in performance.
+The $R^2$ was 0.01579, meaning the weight only explains 1.579% of the variation. The line slopes slightly upward, but groups with similar weights still have considerably different winning percentages. For context, the original comparison against BMI explained about 0.54% of the variation. Neither predictor explains much of the difference in performance.
+
+```{r}
+#| label: fig-weight
+#| fig-cap: "Average weight and winning percentage for groups with at least two qualifying appearances. The line is the fitted regression, with a 95% confidence band."
+#| fig-width: 6.4
+#| fig-height: 3.4
+#| fig-pos: H
+weight_plot
+```
+
+```{r}
+#| label: fig-diagnostics
+#| fig-cap: "Residual and Q-Q plots for the weight model."
+#| fig-width: 6.4
+#| fig-height: 2.8
+#| fig-pos: H
+plot_weight_diagnostics()
+```
 
 # Discussion
 
@@ -263,6 +121,4 @@ The analysis doesn't account for age, era, rank, or individual opponent match up
 
 # References
 
-Fay, Jack, A. J. Dykstra, and Ivan Ramler. 2023. “Sumo Wrestler Characteristics.” SCORE Sports\
-Data Repository, June 29. https://data.scorenetwork.org/wrestling/sumo_wrestingling_since\_\
-1957.html.
+Fay, Jack, A. J. Dykstra, and Ivan Ramler. 2023. “Sumo Wrestler Characteristics.” SCORE Sports Data Repository, June 29. https://data.scorenetwork.org/wrestling/sumo_wrestingling_since_1957.html.
