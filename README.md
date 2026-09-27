@@ -8,7 +8,7 @@ Draft date: September 26, 2026
 - `report.qmd`: report text, table formatting, and short calls that display figures.
 - `R/run_analysis.R`: runs the scripts below in order.
 - `R/01_load_clean.R`: downloads/reads the CSV, cleans names and dates, calculates BMI and winning percentage, and filters appearances.
-- `R/02_summarize.R`: groups by ring name and birth date, calculates averages, and prepares the descriptive table.
+- `R/02_summarize.R`: groups by ring name and birth date, calculates averages, and prepares the table.
 - `R/03_models.R`: fits the BMI and weight regressions, with and without single-appearance groups.
 - `R/04_plots.R`: creates the scatterplots and the function for diagnostic plots.
 - `report.pdf` and `report.html`: rendered reports.
@@ -34,7 +34,7 @@ Required R packages: dplyr, readr, stringr, ggplot2, broom, knitr, and rmarkdown
 
 Source: Fay, Jack, A. J. Dykstra, and Ivan Ramler (2023), *Sumo wrestler characteristics*, SCORE Sports Data Repository: https://data.scorenetwork.org/wrestling/sumo_wrestingling_since_1957.html.
 
-The script downloads the CSV into `data/` when needed. Raw and cleaned external data are not included in this repository. An optional `SUMO_DATA_FILE` environment variable can point to an existing copy. A specific redistribution license has not been verified; consult the original source for its terms.
+
 
 ## External assistance
 
