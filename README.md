@@ -38,4 +38,4 @@ The script downloads the CSV into `data/` when needed. Raw and cleaned external 
 
 ## External assistance
 
-ChatGPT/Codex assisted with analysis planning, R debugging, interpretation, earlier draft text, and separating the analysis into scripts. The report text in this version was taken from the author's latest saved RStudio draft and preserved during the reorganization. Markdown, mathematical notation (including the fitted-response hat and R-squared), and figure-display chunks were added or repaired. This README was prepared with Codex assistance.
+ChatGPT/Codex assisted with planning, R debugging, and separating the analysis into scripts. The report text in this version was taken from the author's latest saved RStudio draft and preserved during the reorganization. Markdown, mathematical notation (including the fitted-response hat and R-squared), and figure-display chunks were added or repaired. This README was prepared with Codex assistance.
