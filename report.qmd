@@ -186,17 +186,21 @@ The term size matters is
 
 Professional sumo wrestling is an incredibly old sport, dating back over a thousand years. In its inception, the concept of weight classes did not exist, and it has stuck to these origins until today. Sumo is one of the few organized combat sports one could observe where there is truely no regulation on the size of the competitor. A wrestler wins by forcing his opponent out of the ring, or forcing him to touch the ground with anything but the soles of his feet. Obviously, this causes there to be some implication that size is an important characteristic. This study asks whether wrestlers with a hgher recorded body mass on average also show a higher average winning percentage across tournaments.
 
-To investigate this question, records from the Makuuchi division are used to calculate a wrestler's average recorded body weight at the time of each of his tournament appearances, as well as the percentage of matches won from said appearances. Linear regression is used to examine the relationship between these two averages. Initially, BMI was pursued as a possible parameter, with weight being an alternative predictor.
+To investigate this question, records from the Makuuchi division are used to calculate a wrestler's average recorded body weight at the time of each of his tournament appearances, as well as the percentage of matches won from said appearances. Linear regression is used to examine the relationship between these two averages. Initially, BMI was pursued as a possible parameter, with weight being an alternative predictor. The analysis also looks at whether adding a parameter of at least two valid tournament appearances for a wrestler to qualify changes the results.
+
+The results show a small positive relationship between weight and win percentage. Even so, weight only explains 1.58% of the relationship, which leaves a lot of space
 
 # Data
 
-The data was obtained from SCORE's Sumo Wrestler Characteristics dataset. The repository gathers records of wrestler performances from 1957 until 2023. The original dataset contains 15,760 rows and 10 columns, with each row being a recording of a sumo wrestler's participation in a Makuuchi tournament, with relevant parameters being their ring name, height, weight, wins, and losses.
+The data was obtained from SCORE's Sumo Wrestler Characteristics dataset, published by Jack Fay, A.J Dykstra, and Ivan Ramler in June 2023. The repository gathers records of wrestler performances from 1957 until 2023. The original dataset contains 15,760 rows and 10 columns, with each row being a recording of a sumo wrestler's participation in a Makuuchi tournament, with relevant parameters being their ring name, height, weight, wins, and losses.
 
-The predictor used is body weight in kilograms, with the response being the average winning percentage. Winning percentage was calculated by dividing the wins over the sum of wins and losses and mulitplying be 100. Initially, BMI was pursued as a potential predictor, but weight was ultimately decided upon. The weight and winning percentages of each sumo wrestler were then averaged across all recorded appearances that could be found under that ring name.
+The predictor used is body weight in kilograms, with the response being the average winning percentage. Winning percentage was calculated by dividing the wins over the sum of wins and losses and mulitplying be 100. Initially, BMI was pursued as a potential predictor, but weight was ultimately decided upon. The weight and winning percentages of each sumo wrestler were then averaged across all recorded appearances that could be found under that ring name. Some appearances were disqualified for various reasons, so the averages were not representative of 100% of a wrestler's recorded matches.
 
-However, only appearances that recorded the full 15 matches being completed were recorded, leaving 14,547 rows total. This excludes tournament records that were ended prematurely, presumably by expulsion, injury, or retirement. This allows the win percentages to all share the same denominator of 15 matches total. Additionally, any appearances with missing values in their fields were not used.
+However, only appearances that recorded the full 15 matches being completed were recorded, excluding 1,213 rows and leaving 14,547 rows total. This excludes tournament records that were ended prematurely, presumably by expulsion, injury, or retirement, which the data does not specify. This allows the win percentages to all share the same denominator of 15 matches total. Additionally, any appearances with missing values in their fields were not used.
 
-The analysis groups appearances by recorded ring name, resulting in 517 wrestlers. The CSV lacks tournament dates, limiting the ability to account for potentially significant variables such as age at competition, or differences in performances across historical eras, which might favor certain builds due to competition meta or ruleset at the time.
+An issue that arised was redundant ring names. 27 ring names appeared with more than one birth date. To combat this, grouping wrestlers was not done by name alone, and those with differing birth dates were assumed to be different individuals sharing ring names, and were seperated by grouping via both name and birth date. This resulted in 590 groups. Additionally, 44 wrestlers were recorded with only one Makuuchi tournament appearance, and were excluded to leave 546 wrestlers for the final count.
+
+The CSV lacks tournament dates, limiting the ability to account for potentially significant variables such as age at competition, or differences in performances across historical eras, which might favor certain builds due to competition meta or ruleset at the time. It also only covers Makuuchi appearances, and not a comprehensive record of all tournament results.
 
 \`\`\`{r}
 
@@ -228,12 +232,37 @@ Y_i=\\beta_0+\\beta_1X_i+\\varepsilon_i,\
 
 where (Y_i) is the average win percentage for group (i), (X_i) is the avg bodyweight in kilograms, (\\beta_0) is the intercept, and (\\beta_1) is the slope. The error, (\\varepsilon_i), represents the variation not explained by the relationship of the two parameters. The slope describes the expected difference in average win percentage be point of percent for each kilogram of average bodyweight across tournaments.
 
-BMI was initially explored as a measure of body size. It was calculated for each appearance as weight in kilograms divided by squared height in meters, then averaged within groups. Separate regressions were done using avg BMI and avg weight. Both models were also fitted with groups including single tournament appearances included to see how their inclusion would affect results.
+The model assumes a linear relationship, independent errors, and constant error variance. Normal\
+errors are also assumed for the usual regression tests. Residual and Q-Q plots were checked\
+(Figure 2). The residuals had uneven spread and a long upper tail, making the variance and\
+normality assumptions questionable. Independence is also uncertain because a wrestler could appear\
+under different names. These issues limit the interpretation of the tests.
+
+BMI was initially explored as a measure of body size, with the choice of weight being subsequential. The slope, 95% confidence interval, p-value for a zero slope, and R2 were used to describe the results. R2\
+measures the proportion of variation explained by the fitted model. The analysis was done in R,\
+using dplyr for grouping, ggplot2 for plotting, and broom for model summaries
 
 Using name and birth date separates shared names but does not resolve name changes within a wrestler’s career. Some wrestlers may end up contributing more than one group, limiting independence in rows. The analysis also does not account for age, historical era, rank, or opponent/tournament strength. The results describe associations between group averages and don't establish that gaining weight improves an individual wrestler’s performance.
 
 # Results
 
+The fitted weight model was
+
+Yi = 41.495 + 0.04613Xi.
+
+Here Yhat represents the predicted average winning percentage. A \`10kg difference in avg weight corresponds to about a 0.46 percentage point higher predicted win percentage. The slope's 95% confidence interval was 0.01546 to 0.07680 percentage points per kilo. Its p-value was\
+0.00327, below 0.05.
+
+The R\^2 was 0.01579, meaning the weight only explains 1.579% of the variation. The line slopes slightly upward, but groups with similar weights still have considerably different winning percentages. For context, the original comparison against BMI explained about 0.54% of the variation. Neither predictor explains much of the difference in performance.
+
 # Discussion
 
+The results show a slight positive relationship between average weight and winning percentage, but it is a relatively insignificant one. A difference in 10 kilos between two competitors only results in 0.46% better performance at tournaments, with most of the variance being unexplained. This does not show that gaining weight could improve a wrestler's performance, or if a heavier wrestler is bound to have a superior Makuuchi tournament career.
+
+The analysis doesn't account for age, era, rank, or individual opponent match ups. It additionally flattens a wrestler's performance throughout their career. The majority of wrestlers also skew towards 2-4 tournament appearances, providing less information behind their averages. A useful next step would be to obtain tournament dates, more solid wrestler identifiers, and potential data on opponents in tournaments or individual matches.
+
 # References
+
+Fay, Jack, A. J. Dykstra, and Ivan Ramler. 2023. “Sumo Wrestler Characteristics.” SCORE Sports\
+Data Repository, June 29. https://data.scorenetwork.org/wrestling/sumo_wrestingling_since\_\
+1957.html.
