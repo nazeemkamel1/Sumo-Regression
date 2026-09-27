@@ -38,4 +38,4 @@ Source: Fay, Jack, A. J. Dykstra, and Ivan Ramler (2023), *Sumo wrestler charact
 
 ## External assistance
 
-ChatGPT/Codex assisted with planning, R debugging, and separating the analysis into scripts. The report text in this version was taken from the author's latest saved RStudio draft and preserved during the reorganization. Markdown, mathematical notation (including the fitted-response hat and R-squared), and figure-display chunks were added or repaired. This README was prepared with Codex assistance.
+ChatGPT/Codex assisted with R debugging, formatting the report, and separating the analysis into scripts. The ReadMe was structured and formatted with Codex assistance.
