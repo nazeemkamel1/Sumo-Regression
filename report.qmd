@@ -67,9 +67,7 @@ Tournament appearances were filtered to only include those whos recorded wins an
 
 Linear regression was used to examine the association between average bodyweight and average win percentage, the model was:
 
-$$
-Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i.
-$$
+$$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i.$$
 
 ```{=latex}
 \end{minipage}
@@ -87,9 +85,7 @@ Using name and birth date separates shared names but does not resolve name chang
 
 The fitted weight model was
 
-$$
-\widehat{Y}_i = 41.495 + 0.04613 X_i.
-$$
+$$\widehat{Y}_i = 41.495 + 0.04613 X_i.$$
 
 Here $\widehat{Y}_i$ represents the predicted average winning percentage. A 10kg difference in avg weight corresponds to about a 0.46 percentage point higher predicted win percentage. The slope's 95% confidence interval was 0.01546 to 0.07680 percentage points per kilo. Its p-value was 0.00327, below 0.05.
 
