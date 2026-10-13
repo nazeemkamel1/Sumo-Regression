@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nazeem Kamel">
-<meta name="dcterms.date" content="2026-09-26">
+<meta name="dcterms.date" content="2026-10-12">
 
-<title>The Impact of Weight on a Sumo Wrestler’s Success</title>
+<title>Weight and Winning Percentage in Makuuchi Sumo: An Association Analysis</title>
 <style>
 
 span.smallcaps{font-variant: small-caps;}
@@ -25,7 +25,26 @@ ul.task-list li input[type="checkbox"] {
 width: 0.8em;
 margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
 }
-</style>
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging-indent div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}</style>
 
 
 <script>/*!
@@ -2178,7 +2197,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">The Impact of Weight on a Sumo Wrestler’s Success</h1>
+<h1 class="title">Weight and Winning Percentage in Makuuchi Sumo: An Association Analysis</h1>
 </div>
 
 
@@ -2195,7 +2214,7 @@ vertical-align: -.125em;
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 26, 2026</p>
+      <p class="date">October 12, 2026</p>
     </div>
   </div>
   
@@ -2209,19 +2228,19 @@ vertical-align: -.125em;
 
 <section id="abstract" class="level1">
 <h1>Abstract</h1>
-<p>The term size matters seems heavily applicable in sumo, since wrestlers compete in a single open weight division. This study uses SCORE’s sumo dataset to determine whether higher average bodyweight can be associated with a higher average matches won in tournaments. Linear regression is applied to 546 wrestler profiles, identified by ring name and birth dates, with at least two complete Makuuchi tournament appearances recorded. A 10 kilo difference in average weight recorded corresponded to about 0.46% higher predicted winning percentage per tournament. However, weight explains only 1.58% of the variation. This suggests that the weight of a wrestler alone does not explain or lead to much difference in average performance.</p>
+<p>The term size matters seems heavily applicable in sumo, since wrestlers compete in a single open weight division. This study uses SCORE’s sumo dataset to determine whether higher average bodyweight is associated with a higher average winning percentage in tournaments. Linear regression is applied to 546 wrestler profiles, identified by ring name and birth dates, with at least two complete Makuuchi tournament appearances recorded. A 10 kilogram difference in average weight corresponds to about 0.46 percentage points higher predicted winning percentage. The estimated slope is statistically significant at the 0.05 level, but weight explains only 1.58% of the variation. This suggests that the association is small and that weight alone explains little of the differences in average performance.</p>
 </section>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Professional sumo wrestling is an incredibly old sport, dating back over a thousand years. In its inception, the concept of weight classes did not exist, and it has stuck to these origins until today. Sumo is one of the few organized combat sports one could observe where there is truely no regulation on the size of the competitor. A wrestler wins by forcing his opponent out of the ring, or forcing him to touch the ground with anything but the soles of his feet. Obviously, this causes there to be some implication that size is an important characteristic. This study asks whether wrestlers with a hgher recorded body mass on average also show a higher average winning percentage across tournaments.</p>
-<p>To investigate this question, records from the Makuuchi division are used to calculate a wrestler’s average recorded body weight at the time of each of his tournament appearances, as well as the percentage of matches won from said appearances. Linear regression is used to examine the relationship between these two averages. Initially, BMI was pursued as a possible parameter, with weight being an alternative predictor. The analysis also looks at whether adding a parameter of at least two valid tournament appearances for a wrestler to qualify changes the results.</p>
-<p>The results show a small positive relationship between weight and win percentage. Even so, weight only explains 1.58% of the relationship, which leaves a lot of space</p>
+<p>Professional sumo is an open-weight sport: wrestlers of different body sizes compete against one another. A match is won by forcing an opponent out of the ring or making any part of the opponent’s body other than the soles of the feet touch the ground. Bodyweight may therefore seem like an advantage, but size alone does not determine a match; technique, balance, speed, experience, and the opponent also matter. Whether heavier wrestlers tend to have better tournament records makes an interesting question rather than an assumption.</p>
+<p>This paper examines the association between average recorded bodyweight and average winning percentage among wrestlers in the Makuuchi division. It uses the SCORE Sumo Wrestler Characteristics dataset, which records tournament appearances from 1957 through 2023, and summarizes each wrestler using ring name and birth date. The analysis focuses on wrestlers with at least two complete tournament appearances. It compares individual wrestler career averages, so its purpose is to describe whether heavier wrestler profiles tend to have higher winning percentages, not to estimate the effect of a wrestler gaining weight across their career, nor the beenefit of weight advantages in matchups. The available data also do not capture several relevant factors, including age, rank, era, and general information on opponents, individually or tournament wide.</p>
+<p>The paper proceeds as follows. The Data section describes the dataset, filtering, and construction of wrestler-level averages. The Methods section defines the regression model and its assumptions. The Results section reports the estimated association and diagnostic checks, and the Discussion interprets the findings, limitations, and possible directions for further analysis.</p>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
-<p>The data was obtained from SCORE’s Sumo Wrestler Characteristics dataset, published by Jack Fay, A.J Dykstra, and Ivan Ramler in June 2023. The repository gathers records of wrestler performances from 1957 until 2023. The original dataset contains 15,760 rows and 10 columns, with each row being a recording of a sumo wrestler’s participation in a Makuuchi tournament, with relevant parameters being their ring name, height, weight, wins, and losses.</p>
+<p>The data was obtained from SCORE’s Sumo Wrestler Characteristics dataset, published by Jack Fay, A.J Dykstra, and Ivan Ramler in June 2023 <span class="citation" data-cites="Fay2023">(<a href="#ref-Fay2023" role="doc-biblioref">Fay et al. 2023</a>)</span>. The repository gathers records of wrestler performances from 1957 until 2023. The original dataset contains 15,760 rows and 10 columns, with each row being a recording of a sumo wrestler’s participation in a Makuuchi tournament, with relevant parameters being their ring name, height, weight, wins, and losses.</p>
 <p>The predictor used is body weight in kilograms, with the response being the average winning percentage. Winning percentage was calculated by dividing the wins over the sum of wins and losses and mulitplying be 100. Initially, BMI was pursued as a potential predictor, but weight was ultimately decided upon. The weight and winning percentages of each sumo wrestler were then averaged across all recorded appearances that could be found under that ring name. Some appearances were disqualified for various reasons, so the averages were not representative of 100% of a wrestler’s recorded matches.</p>
-<p>However, only appearances that recorded the full 15 matches being completed were recorded, excluding 1,213 rows and leaving 14,547 rows total. This excludes tournament records that were ended prematurely, presumably by expulsion, injury, or retirement, which the data does not specify. This allows the win percentages to all share the same denominator of 15 matches total. Additionally, any appearances with missing values in their fields were not used.</p>
+<p>However, only appearances that recorded the full 15 matches being completed were recorded, excluding 1,213 rows and leaving 14,547 rows total. This excludes tournament records that were ended prematurely, presumably by expulsion, injury, or retirement, which the data does not specify. This allows the win percentages to all share the same denominator of 15 matches total. Additionally, any appearances with missing values in their fields were not used. Because early exits may be related to injury or performance, excluding these tournaments could introduce selection bias; the findings therefore describe completed tournaments rather than every recorded appearance.</p>
 <p>An issue that arised was redundant ring names. 27 ring names appeared with more than one birth date. To combat this, grouping wrestlers was not done by name alone, and those with differing birth dates were assumed to be different individuals sharing ring names, and were seperated by grouping via both name and birth date. This resulted in 590 groups. Additionally, 44 wrestlers were recorded with only one Makuuchi tournament appearance, and were excluded to leave 546 wrestlers for the final count.</p>
 <p>The CSV lacks tournament dates, limiting the ability to account for potentially significant variables such as age at competition, or differences in performances across historical eras, which might favor certain builds due to competition meta or ruleset at the time. It also only covers Makuuchi appearances, and not a comprehensive record of all tournament results.</p>
 <div class="cell">
@@ -2276,21 +2295,17 @@ Table 1: Descriptive statistics for groups with at least two qualifying appeara
 <h1>Methods</h1>
 <p>Tournament appearances were filtered to only include those whos recorded wins and losses added up to 15. For each retained appearance, the winning percentage was calculated as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mtext mathvariant="normal">wins</mtext><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mtext mathvariant="normal">wins</mtext><mo>+</mo><mtext mathvariant="normal">losses</mtext><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">100 \times \text{wins}/(\text{wins}+\text{losses})</annotation></semantics></math>. Records were then grouped by a combination of Rikishi name and birth date, as to seperate wrestlers who shared a ring name, of which there were found to be 27. Average bodyweight and average win percentage were calculated across all complete tournament appearances by a wrestler. The main analysis required at least two complete tournament appearances as to ensure a more consistent average was representative by each participating wrestler.</p>
 <p>Linear regression was used to examine the association between average bodyweight and average win percentage, the model was:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>X</mi><mi>i</mi></msub><mo>+</mo><msub><mi>ε</mi><mi>i</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
-Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i.
-</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>i</mi></msub><mo>=</mo><msub><mi>β</mi><mn>0</mn></msub><mo>+</mo><msub><mi>β</mi><mn>1</mn></msub><msub><mi>X</mi><mi>i</mi></msub><mo>+</mo><msub><mi>ε</mi><mi>i</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i.</annotation></semantics></math></p>
 <p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>i</mi></msub><annotation encoding="application/x-tex">Y_i</annotation></semantics></math> is the average win percentage for group <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mi>i</mi></msub><annotation encoding="application/x-tex">X_i</annotation></semantics></math> is the avg bodyweight in kilograms, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mn>0</mn></msub><annotation encoding="application/x-tex">\beta_0</annotation></semantics></math> is the intercept, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>β</mi><mn>1</mn></msub><annotation encoding="application/x-tex">\beta_1</annotation></semantics></math> is the slope. The error, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ε</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\varepsilon_i</annotation></semantics></math>, represents the variation not explained by the relationship of the two parameters. The slope describes the expected difference in average win percentage be point of percent for each kilogram of average bodyweight across tournaments.</p>
 <p>The model assumes a linear relationship, independent errors, and constant error variance. Normal errors are also assumed for the usual regression tests. Residual and Q-Q plots were checked (Figure 2). The residuals had uneven spread and a long upper tail, making the variance and normality assumptions questionable. Independence is also uncertain because a wrestler could appear under different names. These issues limit the interpretation of the tests.</p>
-<p>BMI was initially explored as a measure of body size, with the choice of weight being subsequential. The slope, 95% confidence interval, p-value for a zero slope, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math> were used to describe the results. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math> measures the proportion of variation explained by the fitted model. The analysis was done in R, using dplyr for grouping, ggplot2 for plotting, and broom for model summaries</p>
+<p>BMI was initially explored as a measure of body size, with the choice of weight being subsequential. The slope, 95% confidence interval, p-value for a zero slope, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math> were used to describe the results. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math> measures the proportion of variation explained by the fitted model. The analysis was conducted in R <span class="citation" data-cites="RCoreTeam2026">(<a href="#ref-RCoreTeam2026" role="doc-biblioref">R Core Team 2026</a>)</span>. Data manipulation used dplyr <span class="citation" data-cites="dplyr2026">(<a href="#ref-dplyr2026" role="doc-biblioref">Wickham et al. 2026</a>)</span>, figures used ggplot2 <span class="citation" data-cites="Wickham2016ggplot2">(<a href="#ref-Wickham2016ggplot2" role="doc-biblioref">Wickham 2016</a>)</span>, and model summaries used broom <span class="citation" data-cites="broom2026">(<a href="#ref-broom2026" role="doc-biblioref">Robinson et al. 2026</a>)</span>.</p>
 <p>Using name and birth date separates shared names but does not resolve name changes within a wrestler’s career. Some wrestlers may end up contributing more than one group, limiting independence in rows. The analysis also does not account for age, historical era, rank, or opponent/tournament strength. The results describe associations between group averages and don’t establish that gaining weight improves an individual wrestler’s performance.</p>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
 <p>The fitted weight model was</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>Y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo>=</mo><mn>41.495</mn><mo>+</mo><mn>0.04613</mn><msub><mi>X</mi><mi>i</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
-\widehat{Y}_i = 41.495 + 0.04613 X_i.
-</annotation></semantics></math></p>
-<p>Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>Y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><annotation encoding="application/x-tex">\widehat{Y}_i</annotation></semantics></math> represents the predicted average winning percentage. A 10kg difference in avg weight corresponds to about a 0.46 percentage point higher predicted win percentage. The slope’s 95% confidence interval was 0.01546 to 0.07680 percentage points per kilo. Its p-value was 0.00327, below 0.05.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>Y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo>=</mo><mn>41.495</mn><mo>+</mo><mn>0.04613</mn><msub><mi>X</mi><mi>i</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">\widehat{Y}_i = 41.495 + 0.04613 X_i.</annotation></semantics></math></p>
+<p>Here <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>Y</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><annotation encoding="application/x-tex">\widehat{Y}_i</annotation></semantics></math> represents the predicted average winning percentage. A 10 kg difference in average weight corresponds to about a 0.46 percentage-point higher predicted winning percentage. The slope’s 95% confidence interval was 0.01546 to 0.07680 percentage points per kilogram, so the interval excludes zero and is consistent with a positive association. The p-value for testing a zero slope was 0.00327, below 0.05; this is evidence of a positive linear association under the model, not evidence that weight causes better performance. The diagnostics indicate that the usual regression assumptions may not hold, so this result should not be taken with confidence.</p>
 <p>The <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>R</mi><mn>2</mn></msup><annotation encoding="application/x-tex">R^2</annotation></semantics></math> was 0.01579, meaning the weight only explains 1.579% of the variation. The line slopes slightly upward, but groups with similar weights still have considerably different winning percentages. For context, the original comparison against BMI explained about 0.54% of the variation. Neither predictor explains much of the difference in performance.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -2323,15 +2338,27 @@ Figure 2: Residual and Q-Q plots for the weight model.
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
-<p>The results show a slight positive relationship between average weight and winning percentage, but it is a relatively insignificant one. A difference in 10 kilos between two competitors only results in 0.46% better performance at tournaments, with most of the variance being unexplained. This does not show that gaining weight could improve a wrestler’s performance, or if a heavier wrestler is bound to have a superior Makuuchi tournament career.</p>
-<p>The analysis doesn’t account for age, era, rank, or individual opponent match ups. It additionally flattens a wrestler’s performance throughout their career. The majority of wrestlers also skew towards 2-4 tournament appearances, providing less information behind their averages. A useful next step would be to obtain tournament dates, more solid wrestler identifiers, and potential data on opponents in tournaments or individual matches. The study only measures the success of a wrestler against their own weight at time of competition, an interesting alternative could be the delta in weight between two competitors in a match, and its affect on who comes out victorious.</p>
-</section>
-<section id="references" class="level1">
-<h1>References</h1>
-<p>Fay, Jack, A. J. Dykstra, and Ivan Ramler. 2023. “Sumo Wrestler Characteristics.” SCORE Sports Data Repository, June 29. https://data.scorenetwork.org/wrestling/sumo_wrestingling_since_1957.html.</p>
+<p>The results show a positive association between average weight and winning percentage that is statistically significant under the fitted model, but small in practical terms. A 10 kg difference in average weight corresponds to about 0.46 percentage points higher predicted winning percentage between wrestler profiles; it does not mean that one competitor’s weight advantage produces better performance in a particular match. Weight explains only 1.58% of the variation, and the diagnostic plots raise concerns about the model assumptions, so the reported p-value and confidence interval should be interpreted cautiously. These results do not show that gaining weight would improve a wrestler’s performance or that a heavier wrestler is bound to have a superior Makuuchi tournament career.</p>
+
 </section>
 
-</main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Fay2023" class="csl-entry" role="listitem">
+Fay, Jack, A. J. Dykstra, and Ivan Ramler. 2023. <em>Sumo Wrestler Characteristics</em>. SCORE Sports Data Repository. <a href="https://data.scorenetwork.org/wrestling/sumo_wrestingling_since_1957.html">https://data.scorenetwork.org/wrestling/sumo_wrestingling_since_1957.html</a>.
+</div>
+<div id="ref-RCoreTeam2026" class="csl-entry" role="listitem">
+R Core Team. 2026. <em>R: A Language and Environment for Statistical Computing</em>. R Foundation for Statistical Computing. <a href="https://doi.org/10.32614/R.manuals">https://doi.org/10.32614/R.manuals</a>.
+</div>
+<div id="ref-broom2026" class="csl-entry" role="listitem">
+Robinson, David, Alex Hayes, Simon Couch, and Emil Hvitfeldt. 2026. <em>Broom: Convert Statistical Objects into Tidy Tibbles</em>. <a href="https://doi.org/10.32614/CRAN.package.broom">https://doi.org/10.32614/CRAN.package.broom</a>.
+</div>
+<div id="ref-Wickham2016ggplot2" class="csl-entry" role="listitem">
+Wickham, Hadley. 2016. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>.
+</div>
+<div id="ref-dplyr2026" class="csl-entry" role="listitem">
+Wickham, Hadley, Romain François, Lionel Henry, Kirill Müller, and Davis Vaughan. 2026. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://doi.org/10.32614/CRAN.package.dplyr">https://doi.org/10.32614/CRAN.package.dplyr</a>.
+</div>
+</div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

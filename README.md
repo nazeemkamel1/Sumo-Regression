@@ -34,7 +34,7 @@ Required R packages: dplyr, readr, stringr, ggplot2, broom, knitr, and rmarkdown
 
 Source: Fay, Jack, A. J. Dykstra, and Ivan Ramler (2023), *Sumo wrestler characteristics*, SCORE Sports Data Repository: https://data.scorenetwork.org/wrestling/sumo_wrestingling_since_1957.html.
 
-
+The script downloads the CSV into `data/` when needed. Raw and cleaned external data are not included in this repository. An optional `SUMO_DATA_FILE` environment variable can point to an existing copy. I did not find a clear redistribution or reuse license posted on the SCORE source page, so no explicit dataset license could be verified from the source materials. The repository therefore uses the data for analysis only and does not redistribute the raw file.
 
 ## External assistance
 
